@@ -29,7 +29,7 @@
         border-radius:25px;
         margin-bottom:10px;
         outline:none;
-        color:#bdbdbd;
+        color:#ffffff;
         width: 100px;
         }
 
@@ -81,8 +81,8 @@
     <div class="content">
         <div class="search" hidden="true">
             <form>
-                <input type="text" style="width: 300px;" placeholder="Search Movie..." onclick="display()" onclick="" onmouseout="hide()"
-                    id="movie-input" required>
+                <input type="text" style="width: 300px;" placeholder="Search Movie..." onclick="display()" onclick=""
+                    onmouseout="hide()" id="movie-input" required>
                 <br>
                 <p id="example-text" hidden="true">Ex. search "Star Wars" to find where it streams</p>
                 <button type="submit" id="find-movie" onclick="location.href='landing.html'">Search</button>
@@ -107,6 +107,7 @@
         firebase.initializeApp(config);
 
         var database = firebase.database();
+        var userDataNumber = 0;
 
         $(".search").fadeIn(4000);
         $(".search").attr("hidden", false);
@@ -120,9 +121,16 @@
         function hide() {
             $("#example-text").attr("hidden", true);
             $("#movie-input").attr("style", "width: 300px;")
-            $("#movie-input").attr("placeholder","Search Movie..." );
+            $("#movie-input").attr("placeholder", "Search Movie...");
         };
-       
+
+        function writeUserData(userId, movieName) {
+            firebase.database().ref('users/' + userId).set({
+                username: userId,
+                movie: movieName
+            });
+        }
+
 
         $("#find-movie").on("click", function (event) {
             event.preventDefault();
@@ -132,9 +140,9 @@
             console.log(movie);
             localStorage.setItem("movie", movie);
 
-            database.ref().set({
-                movie: movie
-            });
+            userDataNumber++;
+
+            writeUserData(userDataNumber, movie);
 
         });
 

@@ -76,6 +76,8 @@
         firebase.initializeApp(config);
 
         var database = firebase.database();
+
+
         $(".search").fadeIn(4000);
         $(".search").attr("hidden", false);
 
@@ -92,10 +94,12 @@
             var movie = $("#movie-input").val().trim();
 
             console.log(movie);
+            console.log(userDataNumber);
             localStorage.setItem("movie", movie);
 
             database.ref().set({
-                movie: movie
+                movie: movie,
+                user:userDataNumber
             });
 
         });
@@ -104,8 +108,11 @@
 
             // Log everything that's coming out of snapshot
             console.log(snapshot.val().movie);
+            console.log(snapshot.val().userDataNumber);
 
+            var userDataNumber = snapshot.val().user;
             var movie = snapshot.val().movie;
+
             var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
 
             $.ajax({
