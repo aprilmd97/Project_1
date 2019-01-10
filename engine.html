@@ -13,20 +13,22 @@
         text-align: center;
         margin: 0;
         }
+        
+       
 
         body{
          background-color: black;
         }
 
         form {
-            margin-top: 25%;
+            margin-top: 15%;
         }
 
         button {
         background-color: black;
         padding:10px;
-        border-style: solid rgb(255, 255, 255) 3px;
-        border-radius:25px;
+        border-style: solid rgb(255, 255, 255) 1px;
+        border-radius:10px;
         margin-bottom:10px;
         outline:none;
         color:#bdbdbd;
@@ -36,8 +38,8 @@
         button:hover {
         background-color: rgba(255, 255, 255, 0.089);
         padding:10px;
-        border-style: solid rgb(255, 255, 255) 3px;
-        border-radius:25px;
+        border-style: solid rgb(255, 255, 255) 1px;
+        border-radius:10px;
         margin-bottom:10px;
         outline:none;
         color:#bdbdbd;
@@ -47,8 +49,8 @@
         input{
         background-color: black;
         padding:10px;
-        border-style: solid rgb(255, 255, 255) 3px;
-        border-radius:25px;
+        border-style: solid rgb(255, 255, 255) 1px;
+        border-radius:10px;
         margin-bottom:10px;
         outline:none;
         color:#bdbdbd;
@@ -60,8 +62,8 @@
          input:hover{
         background-color: black;
         padding:10px;
-        border-style: solid rgb(255, 255, 255) 3px;
-        border-radius:25px;
+        border-style: solid rgb(255, 255, 255) 1px;
+        border-radius:10px;
         margin-bottom:10px;
         outline:none;
         color:#bdbdbd;
@@ -72,17 +74,24 @@
 
         </style>
 
-    <title>Document</title>
+    <title>Search Engine</title>
 
 </head>
 
 <body>
+    
+   
 
     <div class="content">
+        <!--Logo placement-->
+            <div class="logoLarge">
+                    <img src="Images/logoDesktop.png" alt = "logoDesktop" width="200" height= "auto"> 
+                </div>
+
         <div class="search" hidden="true">
             <form>
-                <input type="text" style="width: 300px;" placeholder="Search Movie..." onclick="display()" onclick="" onmouseout="hide()"
-                    id="movie-input" required>
+                <input type="text" style="width: 300px;" placeholder="Search Movie..." onclick="display()" onclick=""
+                    onmouseout="hide()" id="movie-input" required>
                 <br>
                 <p id="example-text" hidden="true">Ex. search "Star Wars" to find where it streams</p>
                 <button type="submit" id="find-movie" onclick="location.href='landing.html'">Search</button>
@@ -120,9 +129,9 @@
         function hide() {
             $("#example-text").attr("hidden", true);
             $("#movie-input").attr("style", "width: 300px;")
-            $("#movie-input").attr("placeholder","Search Movie..." );
+            $("#movie-input").attr("placeholder", "Search Movie...");
         };
-       
+
 
         $("#find-movie").on("click", function (event) {
             event.preventDefault();
