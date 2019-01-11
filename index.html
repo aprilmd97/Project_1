@@ -95,6 +95,7 @@
         crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
     <script>
+        var userId = 7;
 
         var config = {
             apiKey: "AIzaSyA60HsV7ILHfehSDuSdSElHX76qR-Bkt_w",
@@ -107,7 +108,8 @@
         firebase.initializeApp(config);
 
         var database = firebase.database();
-        var userDataNumber = 0;
+        var connectionsRef = database.ref("/connections");
+        var connectedRef = database.ref(".info/connected");
 
         $(".search").fadeIn(4000);
         $(".search").attr("hidden", false);
@@ -131,7 +133,6 @@
             });
         }
 
-
         $("#find-movie").on("click", function (event) {
             event.preventDefault();
 
@@ -140,11 +141,25 @@
             console.log(movie);
             localStorage.setItem("movie", movie);
 
-            userDataNumber++;
-
-            writeUserData(userDataNumber, movie);
+            writeUserData(movie);
 
         });
+
+        connectedRef.on("value", function (snap) {
+
+            if (snap.val()) {
+
+                var con = connectionsRef.push(true);
+                
+                con.onDisconnect().remove();
+            }
+        });
+
+        connectionsRef.on("value", function (snap) {
+
+            console.log(snap.numChildren());
+        });
+
 
     </script>
 

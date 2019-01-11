@@ -76,6 +76,7 @@
         firebase.initializeApp(config);
 
         var database = firebase.database();
+        var userDataNumber;
 
 
         $(".search").fadeIn(4000);
@@ -95,9 +96,10 @@
 
             console.log(movie);
             console.log(userDataNumber);
+
             localStorage.setItem("movie", movie);
 
-            database.ref().set({
+            database.ref('users/'+ userId).push({
                 movie: movie,
                 user:userDataNumber
             });
@@ -107,11 +109,11 @@
         database.ref().on("value", function (snapshot) {
 
             // Log everything that's coming out of snapshot
-            console.log(snapshot.val().movie);
-            console.log(snapshot.val().userDataNumber);
 
-            var userDataNumber = snapshot.val().user;
             var movie = snapshot.val().movie;
+
+          //  console.log(snapshot.val().movie);
+            console.log(userDataNumber);
 
             var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
 
