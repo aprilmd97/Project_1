@@ -102,7 +102,7 @@ function everyFunc(subResults) {
 }
 
 function guideShow(search) {
-    var showURL = "http://api-public.guidebox.com/v2/search?api_key=" + guideKey + "&type=show&query=" + search;
+    var showURL = "https://api-public.guidebox.com/v2/search?api_key=" + guideKey + "&type=show&query=" + search;
 
     $.ajax({
         url: showURL,
@@ -113,7 +113,7 @@ function guideShow(search) {
         console.log(response.results[0].id);
         var showID = response.results[0].id;
 
-        var responseShow = "http://api-public.guidebox.com/v2/shows/" + showID + "/episodes?api_key=" + guideKey + "&sources=subscription,purchase,free,tv_everywhere&include_links=true";
+        var responseShow = "https://api-public.guidebox.com/v2/shows/" + showID + "/episodes?api_key=" + guideKey + "&sources=subscription,purchase,free,tv_everywhere&include_links=true";
 
         $.ajax({
             url: responseShow,
@@ -161,7 +161,7 @@ function guideShow(search) {
 // }
 
 function guidePerson(search) {
-    var personURL = "http://api-public.guidebox.com/v2/search?api_key=" + guideKey + "&type=person&query=" + search;
+    var personURL = "https://api-public.guidebox.com/v2/search?api_key=" + guideKey + "&type=person&query=" + search;
 
     $.ajax({
         url: personURL,
@@ -181,7 +181,7 @@ $("#find-movie").on("click", function () {
     var guideSearch = $("#movie-input").val().trim().toLowerCase();
     $("#loading").show();
     //guideMovie(guideSearch);
-    //guideShow(guideSearch);
+    guideShow(guideSearch);
     // guidePerson(guideSearch);
 })
 
