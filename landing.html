@@ -78,7 +78,6 @@
            position: relative;
            float: right;
            margin: 4em;
-           top:0;
        }
 
        header{
@@ -124,8 +123,7 @@
             border-style: solid rgb(255, 255, 255) 1px;
             border-radius: 25px;
             color: whitesmoke;
-            
-
+    
         }
 
         #todo-list {
@@ -141,10 +139,18 @@
             margin: 10px;
         }
 
-        #subText {
+        #subText, #purcText, #freeText, #everyText {
             border-style:solid white 1px;
             border-radius: 25px;
             color: white;
+        }
+
+        #loading {
+            margin: 10px;
+        }
+
+        #streamResults {
+            margin: 10px;
         }
 
         li {
@@ -334,7 +340,7 @@
                 var recentSearch = [];
 
                 $(document).ready(function () {
-                    //$("#loading").hide();
+                    // $("#loading").hide();
 
                     var config = {
                         apiKey: "AIzaSyA60HsV7ILHfehSDuSdSElHX76qR-Bkt_w",

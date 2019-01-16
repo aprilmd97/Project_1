@@ -1,38 +1,7 @@
 
 var guideKey = "0e23f79151528714d7a69dbe1cf391543c83a031";
 
-
-// function guideMovie(search) {
-//     var movieURL = "http://api-public.guidebox.com/v2/search?api_key=" + guideKey + "&type=movie&query=" + search;
-
-//     $.ajax({
-//         url: movieURL,
-//         method: "GET"
-//     }).then(function (response) {
-//         console.log("This is the movie response");
-//         console.log(response);
-//         console.log(response.results[0].id);
-//         var movieID = response.results[0].id;
-
-//         var responseMovie = "http://api-public.guidebox.com/v2/movies/" + movieID + "/api_key=" + guideKey + "&sources=subscription,purchase,free,tv_everywhere&include_links=true";
-
-//         $.ajax({
-//             url: responseMovie,
-//             method: "GET"
-//         }).then(function(results){
-//             console.log("These are my movie results string");
-//             console.log(results);
-
-// console.log(results.results[0].subscription_web_sources);
-// console.log(results.results[0].purchase_web_sources);
-// console.log(results.results[0].free_web_sources);
-// console.log(results.results[0].tv_everywhere_web_sources);
-//         })
-//     })
-// }
-
 function subFunc(subResults) {
-    //run through the array of sub web sources
     var subText = document.createElement("p");
     subText.setAttribute("id", "subText");
 
@@ -60,7 +29,12 @@ function subFunc(subResults) {
 }
 
 function purcFunc(subResults) {
-    console.log("purchase")
+    var purcText = document.createElement("p");
+    purcText.setAttribute("id", "purcText");
+
+    var purcP = document.createTextNode("Purchase: ");
+    purcText.appendChild(purcP);
+    document.getElementById("purchase").appendChild(purcText);
     for (j = 0; j < subResults.results[0].purchase_web_sources.length; j++) {
         console.log(subResults.results[0].purchase_web_sources[j].link);
 
@@ -78,6 +52,12 @@ function purcFunc(subResults) {
 }
 
 function freeFunc(subResults) {
+    var freeText = document.createElement("p");
+    freeText.setAttribute("id", "freeText");
+
+    var freeP = document.createTextNode("Free to Watch: ");
+    freeText.appendChild(freeP);
+    document.getElementById("free").appendChild(freeText);
     for (k = 0; k < subResults.results[0].free_web_sources.length; k++) {
         console.log(subResults.results[0].free_web_sources[k].link);
 
@@ -97,6 +77,12 @@ function freeFunc(subResults) {
 }
 
 function everyFunc(subResults) {
+    var everyText = document.createElement("p");
+    everyText.setAttribute("id", "everyText");
+
+    var everyP = document.createTextNode("TV Everywhere: ");
+    everyText.appendChild(everyP);
+    document.getElementById("tvEverywhere").appendChild(everyText);
     for (l = 0; l < subResults.results[0].tv_everywhere_web_sources.length; l++) {
         console.log(subResults.results[0].tv_everywhere_web_sources[l].link);
 
@@ -145,6 +131,35 @@ function guideShow(search) {
     })
 }
 
+// function guideMovie(search) {
+//     var movieURL = "http://api-public.guidebox.com/v2/search?api_key=" + guideKey + "&type=movie&query=" + search;
+
+//     $.ajax({
+//         url: movieURL,
+//         method: "GET"
+//     }).then(function (response) {
+//         console.log("This is the movie response");
+//         console.log(response);
+//         console.log(response.results[0].id);
+//         var movieID = response.results[0].id;
+
+//         var responseMovie = "http://api-public.guidebox.com/v2/movies/" + movieID + "/api_key=" + guideKey + "&sources=subscription,purchase,free,tv_everywhere&include_links=true";
+
+//         $.ajax({
+//             url: responseMovie,
+//             method: "GET"
+//         }).then(function(results){
+//             console.log("These are my movie results string");
+//             console.log(results);
+
+// console.log(results.results[0].subscription_web_sources);
+// console.log(results.results[0].purchase_web_sources);
+// console.log(results.results[0].free_web_sources);
+// console.log(results.results[0].tv_everywhere_web_sources);
+//         })
+//     })
+// }
+
 function guidePerson(search) {
     var personURL = "http://api-public.guidebox.com/v2/search?api_key=" + guideKey + "&type=person&query=" + search;
 
@@ -166,7 +181,7 @@ $("#find-movie").on("click", function () {
     var guideSearch = $("#movie-input").val().trim().toLowerCase();
     $("#loading").show();
     //guideMovie(guideSearch);
-    guideShow(guideSearch);
+    //guideShow(guideSearch);
     // guidePerson(guideSearch);
 })
 
