@@ -9,163 +9,347 @@
         crossorigin="anonymous">
 
     <style>
-        .content{
-        text-align: center;
-        margin: 0;
+        .title {
+            font-size: 12px;
         }
 
-        body{
-         background-color: black;
+        .content {
+            text-align: center;
+            margin: 0;
+        }
+
+        body {
+            background-color: black;
         }
 
         form {
-            margin-top: 10%;
+            margin-top: 5%;
         }
 
         button {
-        background-color: black;
-        padding:10px;
-        border-style: solid rgb(255, 255, 255) 3px;
-        border-radius:25px;
-        margin-bottom:10px;
-        outline:none;
-        color:#ffffff;
-        width: 100px;
+            background-color: black;
+            padding: 8px;
+            border-style: solid rgb(255, 255, 255) 3px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            outline: none;
+            color: #ffffff;
+            width: 80px;
         }
 
         button:hover {
-        background-color: rgba(255, 255, 255, 0.089);
-        padding:10px;
-        border-style: solid rgb(255, 255, 255) 3px;
-        border-radius:25px;
-        margin-bottom:10px;
-        outline:none;
-        color:#bdbdbd;
-        width: 100px;
+            background-color: rgba(255, 255, 255, 0.089);
+            padding: 8px;
+            border-style: solid rgb(255, 255, 255) 3px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            outline: none;
+            color: #bdbdbd;
+            width: 80px;
         }
 
-        input{
-        background-color: black;
-        padding:10px;
-        border-style: solid rgb(255, 255, 255) 3px;
-        border-radius:25px;
-        margin-bottom:10px;
-        outline:none;
-        color:#bdbdbd;
-        width: 500px;
-        opacity: .5;
+        input {
+            background-color: black;
+            padding: 10px;
+            border-style: solid rgb(255, 255, 255) 3px;
+            border-radius: 25px;
+            margin-bottom: 10px;
+            outline: none;
+            color: #bdbdbd;
+            opacity: .5;
         }
 
+        #movie-input:hover {
+            background-color: black;
+            padding: 10px;
+            border-style: solid rgb(255, 255, 255) 3px;
+            border-radius: 25px;
+            margin-bottom: 10px;
+            outline: none;
+            color: #bdbdbd;
+            width: 500px;
+            opacity: 1;
+        }
 
-         input:hover{
-        background-color: black;
-        padding:10px;
-        border-style: solid rgb(255, 255, 255) 3px;
-        border-radius:25px;
-        margin-bottom:10px;
-        outline:none;
-        color:#bdbdbd;
-        width: 500px;
-        opacity: 1;
+        .wrapper {
+            border: 2px solid white;
+            border-style: solid rgb(255, 255, 255) 1px;
+            border-radius: 25px;
+            opacity: .5;
+            color: #bdbdbd;
+            padding: 15px;
+            margin: 10px;
+            width: flex;
+            position: relative;
+            display: inline-flex;
 
         }
 
-        </style>
+        form {
+            position: static;
+        }
 
+        #login {
+            position: relative;
+            left: 40em;
+            margin: 4em;
+        }
+
+        .title:hover {
+            color: rgb(255, 255, 255);
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
     <title>Document</title>
 
 </head>
 
 <body>
 
+
+
+    <!--</button>-->
+
+    <div id="dialog">
+        <div id="firebaseui-auth-container"></div>
+    </div>
+
     <div class="content">
-        <!--Logo placement-->
-        <div class="logoLarge">
-                <img src="Images/logoDesktop.png" alt = "logoDesktop" width="200" height= "auto"> 
-            </div>
+
+        <div id="userButtons">
+            <button id="login" type="submit">Login</button>
+            <span id="logout" hidden="true">Logout</span>
+        </div>
+
         <div class="search" hidden="true">
             <form>
-                <input type="text" style="width: 300px;" placeholder="Search Movie..." onclick="display()" onclick=""
-                    onmouseout="hide()" id="movie-input" required>
+
+                <div class="logoLarge">
+
+                    <img src="Images/logoDesktop.png" alt="logoDesktop" width="200" height="auto">
+                </div>
+
+                <input type="text" style="width: 300px;" placeholder="Search Movie or TV Series..." id="movie-input"
+                    required>
                 <br>
                 <p id="example-text" hidden="true">Ex. search "Star Wars" to find where it streams</p>
+
                 <button type="submit" id="find-movie" onclick="location.href='landing.html'">Search</button>
                 <button type="submit">Random</button>
+
             </form>
+
         </div>
+
+
+        <div class="wrapper" hidden="true">
+            <table id="myTable" hidden="true">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td onclick="location.href='landing.html'" id="title-data_1" class="title"></td>
+                        <td id="year-data_1"></td>
+                        <td onclick="location.href='landing.html'" id="title-data_5" class="title"></td>
+                        <td id="year-data_5"></td>
+
+                    </tr>
+
+
+                    <tr>
+                        <td onclick="location.href='landing.html'" id="title-data_2" class="title"></td>
+                        <td id="year-data_2"></td>
+                        <td onclick="location.href='landing.html'" id="title-data_6" class="title"></td>
+                        <td id="year-data_6"></td>
+                    </tr>
+
+                    <tr>
+                        <td onclick="location.href='landing.html'" id="title-data_3" class="title"></td>
+                        <td id="year-data_3"></td>
+                        <td onclick="location.href='landing.html'" id="title-data_7" class="title"></td>
+                        <td id="year-data_7"></td>
+                    </tr>
+
+                    <tr>
+                        <td onclick="location.href='landing.html'" id="title-data_4" class="title"></td>
+                        <td id="year-data_4"></td>
+                        <td onclick="location.href='landing.html'" id="title-data_8" class="title"></td>
+                        <td id="year-data_8"></td>
+                    </tr>
+                    <tr>
+
+                </tbody>
+            </table>
+        </div>
+
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
         crossorigin="anonymous"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+        crossorigin="anonymous"></script>
+
+
+
     <script>
-        var userId = 7;
 
-        var config = {
-            apiKey: "AIzaSyA60HsV7ILHfehSDuSdSElHX76qR-Bkt_w",
-            authDomain: "game-3117c.firebaseapp.com",
-            databaseURL: "https://game-3117c.firebaseio.com",
-            projectId: "game-3117c",
-            storageBucket: "game-3117c.appspot.com",
-            messagingSenderId: "485448934879"
-        };
-        firebase.initializeApp(config);
+        $(document).ready(function () {
 
-        var database = firebase.database();
-        var connectionsRef = database.ref("/connections");
-        var connectedRef = database.ref(".info/connected");
+            var config = {
+                apiKey: "AIzaSyA60HsV7ILHfehSDuSdSElHX76qR-Bkt_w",
+                authDomain: "game-3117c.firebaseapp.com",
+                databaseURL: "https://game-3117c.firebaseio.com",
+                projectId: "game-3117c",
+                storageBucket: "game-3117c.appspot.com",
+                messagingSenderId: "485448934879"
+            };
 
-        $(".search").fadeIn(4000);
-        $(".search").attr("hidden", false);
+            firebase.initializeApp(config);
 
-        function display() {
-            $("#example-text").attr("hidden", false);
-            $("#movie-input").attr("style", "width: 500px;");
-            $("#movie-input").attr("placeholder", " ");
-        }
+            var database = firebase.database();
+            var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
-        function hide() {
-            $("#example-text").attr("hidden", true);
-            $("#movie-input").attr("style", "width: 300px;")
-            $("#movie-input").attr("placeholder", "Search Movie...");
-        };
 
-        function writeUserData(userId, movieName) {
-            firebase.database().ref('users/' + userId).set({
-                username: userId,
-                movie: movieName
+            $("#login").on("click", function (event) {
+
+                $(".content").hide();
+
+                ui.start('#firebaseui-auth-container', {
+                    signInOptions: [
+                        firebase.auth.EmailAuthProvider.PROVIDER_ID
+                    ],
+                    // Other config options...
+                });
+
+
+                $(function () {
+
+                    var dia = $("#dialog");
+                    $("#dialog").dialog();
+
+                    $(".ui-button").on("click", function () {
+                        $(".content").show();
+                    });
+
+                });
+
             });
-        }
 
-        $("#find-movie").on("click", function (event) {
-            event.preventDefault();
 
-            var movie = $("#movie-input").val().trim();
 
-            console.log(movie);
-            localStorage.setItem("movie", movie);
+            $(".search").fadeIn(4000);
+            $(".search").attr("hidden", false);
 
-            writeUserData(movie);
+            $("#movie-input").on("click", function () {
+                $("#example-text").attr("hidden", false);
+                $("#movie-input").attr("style", "width: 500px;");
+            });
+
+
+            $("#movie-input").on("mouseout", function () {
+                $("#example-text").attr("hidden", true);
+                $("#movie-input").attr("style", "width: 300px;")
+                $("#movie-input").attr("placeholder", "Search Movie or TV Series...");
+            });
+
+
+            $("#movie-input").on("keyup", function () {
+
+                $("#example-text").attr("hidden", true);
+
+
+                $("#myTable").fadeIn(2000);
+                $("#myTable").attr("hidden", false);
+
+
+                var movie = $(this).val().trim().toLowerCase();
+                var queryURL = "https://www.omdbapi.com/?s=" + movie + "&y=&plot=short&apikey=trilogy";
+
+
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                }).then(function (response) {
+                    console.log(response);
+
+                    if (response.Error) {
+                        $(".wrapper").attr("hidden", true);
+                    } else {
+                        $(".wrapper").attr("hidden", false);
+                    }
+
+                    $("#title-data_1").text(response.Search[0].Title);
+                    $("#title-data_2").text(response.Search[1].Title);
+                    $("#title-data_3").text(response.Search[2].Title);
+                    $("#title-data_4").text(response.Search[3].Title);
+                    $("#title-data_5").text(response.Search[4].Title);
+                    $("#title-data_6").text(response.Search[5].Title);
+                    $("#title-data_7").text(response.Search[6].Title);
+                    $("#title-data_8").text(response.Search[7].Title);
+                    $("#title-data_9").text(response.Search[8].Title);
+
+                    $("#year-data_1").text(response.Search[0].Year);
+                    $("#year-data_2").text(response.Search[1].Year);
+                    $("#year-data_3").text(response.Search[2].Year);
+                    $("#year-data_4").text(response.Search[3].Year);
+                    $("#year-data_5").text(response.Search[4].Year);
+                    $("#year-data_6").text(response.Search[5].Year);
+                    $("#year-data_7").text(response.Search[6].Year);
+                    $("#year-data_8").text(response.Search[7].Year);
+                    $("#year-data_9").text(response.Search[8].Year);
+
+
+                });
+
+
+            });
+
+
+
+            $("#find-movie").on("click", function (event) {
+                event.preventDefault();
+
+                var movie = $("#movie-input").val().trim();
+
+                console.log(movie);
+
+                database.ref('/users').set({
+                    movieName: movie
+                })
+
+                localStorage.setItem(
+                    "movieName", movie
+                )
+            });
+
+            $("td").on("click", function (event) {
+                event.preventDefault();
+
+                var movie = $(this).text().trim();
+
+                database.ref('/users').set({
+                    movieName: movie
+                })
+                localStorage.setItem(
+                    "movieName", movie
+                )
+            });
 
         });
-
-        connectedRef.on("value", function (snap) {
-
-            if (snap.val()) {
-
-                var con = connectionsRef.push(true);
-                
-                con.onDisconnect().remove();
-            }
-        });
-
-        connectionsRef.on("value", function (snap) {
-
-            console.log(snap.numChildren());
-        });
-
-
     </script>
+    <script src="guidebox.js"></script>
 
 </body>
 
