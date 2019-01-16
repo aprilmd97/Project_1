@@ -127,9 +127,12 @@
             
 
         }
+
         #todo-list {
             color: whitesmoke;
+            list-style-type: none;
         }
+
         #title, #rated, #genre, #plot, #actors {
             color: whitesmoke;
         }
@@ -144,6 +147,20 @@
             color: white;
         }
 
+        li {
+            margin: 3px; 
+            padding: 5px;
+            float: left;
+        }
+        li:hover{
+            color: rgb(255, 255, 255);
+            font-size: 15px;
+            cursor: pointer;
+        }
+        #user-searches{
+            position: static;
+        }
+       
     </style>
     <title>Document</title>
 </head>
@@ -162,8 +179,8 @@
                 <div class="row">
                     <div class="col-12">
                         <div>
-                            <button id="login" type="submit">Login</button>
-                            <span id="logout" hidden="true">Logout</span>
+                            <button id="login" type="submit">Login</button><button id="logout" type="submit">Logout</button>
+                            <p id="userName"></p>
                         </div>
                     </div>
                 </div>
@@ -333,21 +350,114 @@
                     var database = firebase.database();
                     var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
-
-                    // database.ref().on("value", function (snapshot) {
-
-                    // var movie = snapshot.val().users.movieName;
-                    var movie = localStorage.getItem("movieName");
-                    var newTodo = $("<li>").text(movie);
+                    var connectionsRef = database.ref("/connections");
+                    var connectedRef = database.ref(".info/connected");
 
 
+                    connectedRef.on("value", function (snap) {
 
-                    // if (recentSearch.indexOf(movie.toLowerCase()) === -1) {
-                    //     $("#todo-list").prepend(newTodo);
-                    //     recentSearch.push(movie.toLowerCase())
-                    //     console.log(recentSearch);
-                    // }
+                        // If they are connected..
+                        if (snap.val()) {
 
+                            // Add user to the connections list.
+                            var con = connectionsRef.push(true);
+                            // Remove user from the connection list when they disconnect.
+                            con.onDisconnect().remove();
+                        }
+                    });
+
+
+                    $("#login").on("click", function (event) {
+
+                        $(".content").hide();
+
+                        ui.start('#firebaseui-auth-container', {
+                            signInOptions: [
+                                firebase.auth.EmailAuthProvider.PROVIDER_ID
+                            ],
+
+                            signInSuccessUrl: 'landing.html'
+                            // Other config options...
+                        });
+
+
+                        $(function () {
+
+                            var dia = $("#dialog");
+                            $("#dialog").dialog();
+
+                            $(".ui-button").on("click", function () {
+                                $(".content").show();
+                            });
+
+                        });
+
+                    });
+
+                    $("#logout").on("click", function (event) {
+                        event.preventDefault();
+
+                        firebase.auth().signOut()
+                            .then(function (anon) {
+                                console.log(anon);
+                            });
+
+
+                        $("#userName").text(" ");
+                    });
+
+                    var currentUser = null;
+
+
+
+                    firebase.auth().onAuthStateChanged(function (user) {
+                        if (user) {
+                            console.log(user.uid);
+
+                            $("#userName").text(user.displayName);
+
+                            $("#logout").show();
+                            $("#login").hide();
+
+
+
+                            currentUser = user;
+                            database.ref('/user' + currentUser.uid).on("child_added", function (childSnap) {
+                                var child = childSnap.val();
+                                console.log(child);
+
+                                var newTodo = $("<li>").text(child.movie);
+                                $("#todo-list").prepend(newTodo);
+
+                            });
+
+
+                        } else {
+                            console.log("Not Logged In");
+
+                            $("#userName").text(" ");
+
+                            $("#logout").hide();
+                            $("#login").show();
+
+                            $("#todo-list").empty();
+
+                            currentUser = null;
+                            database.ref('/user' + currentUser);
+                        }
+
+                    });
+
+
+                    if (currentUser === null) {
+                        var movie = localStorage.getItem("movieName");
+                        var newTodo = $("<li>").text(movie);
+
+                    } else {
+                        database.ref('/user' + currentUser.uid).push({
+                            movie: movie
+                        })
+                    };
 
 
                     var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
@@ -379,15 +489,9 @@
                         localStorage.removeItem("movieName");
                     });
 
-                    // }, 
-                    // function (errorObject) {
-                    //     console.log("Errors handled: " + errorObject.code);
-                    // });
-                    
+
                     var searchTerm = localStorage.getItem("movieName");
                     guideShow(searchTerm);
-
-                    
 
                     $("#login").on("click", function (event) {
 
@@ -397,6 +501,7 @@
                             signInOptions: [
                                 firebase.auth.EmailAuthProvider.PROVIDER_ID
                             ],
+                            signInSuccessUrl: 'landing.html'
                             // Other config options...
                         });
 
@@ -416,8 +521,6 @@
 
 
 
-
-
                     $(".search").fadeIn(4000);
                     $(".search").attr("hidden", false);
 
@@ -428,6 +531,7 @@
                     $("#find-movie").on("click", function (event) {
                         event.preventDefault();
                         console.log("string")
+
                         var movie = $("#movie-input").val().trim();
                         var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
 
@@ -458,18 +562,21 @@
                             $("#actors").text(response.Actors);
                         });
 
-                        // var todo = $("#movie-input").val().trim();
-                        // var newTodo = $("<li>").text(todo);
+                        var todo = $("#movie-input").val().trim();
+                        var newTodo = $("<li>").text(todo);
 
 
+                        if (currentUser === null) {
+                            var movie = localStorage.getItem("movieName");
+                            var newTodo = $("<li>").text(movie);
 
-                        database.ref('/users').set({
-                            movieName: movie
-                        });
-
+                        } else {
+                            database.ref('/user' + currentUser.uid).push({
+                                movie: movie
+                            })
+                        };
 
                     });
-
 
                     $("#movie-input").on("keyup", function () {
 
@@ -517,8 +624,6 @@
                             $("#year-data_9").text(response.Search[8].Year);
 
 
-
-
                         });
 
                     });
@@ -529,9 +634,7 @@
                         var movie = $(this).text().trim();
                         var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
                         console.log('string')
-                        // database.ref('/users').set({
-                        //     movieName: movie
-                        // });
+
 
                         $.ajax({
                             url: queryURL,
@@ -550,23 +653,34 @@
                             $("#actors").text(response.Actors);
                         });
 
+                        if (currentUser === null) {
+                            var movie = localStorage.getItem("movieName");
+                            var newTodo = $("<li>").text(movie);
+
+                        } else {
+                            database.ref('/user' + currentUser.uid).push({
+                                movie: movie
+                            })
+                        };
+
                     });
 
                     $("#user-searches").on("click", function () {
-                        $("#todo-list").toggle();
+                        $("#todo-list").fadeToggle(2000);
 
 
                     });
 
-                    $(".title").on("click", function () {
-                        var movie = $(this).text();
-                        console.log(movie);
-                        var newTodo = $("<li>").text(movie);
 
-                        if (recentSearch.indexOf(movie.toLowerCase()) === -1) {
-                            $("#todo-list").prepend(newTodo);
-                            recentSearch.push(movie.toLowerCase())
-                            console.log(recentSearch);
+                    $(".title").on("click", function () {
+                        if (currentUser === null) {
+                            var movie = $(this).text();
+                            console.log(movie);
+                            var newTodo = $("<li>").text(movie);
+                            if (recentSearch.indexOf(movie.toLowerCase()) === -1) {
+                                $("#todo-list").prepend(newTodo);
+                                recentSearch.push(movie.toLowerCase())
+                            }
                         }
                     });
                 });

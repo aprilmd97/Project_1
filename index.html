@@ -120,8 +120,8 @@
     <div class="content">
 
         <div id="userButtons">
-            <button id="login" type="submit">Login</button>
-            <span id="logout" hidden="true">Logout</span>
+            <button id="login" type="submit">Login</button><button id="logout" type="submit">Logout</button>
+            <p id="userName"></p>
         </div>
 
         <div class="search" hidden="true">
@@ -221,15 +221,33 @@
             var database = firebase.database();
             var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
+            var connectionsRef = database.ref("/connections");
+            var connectedRef = database.ref(".info/connected");
+
+            connectedRef.on("value", function (snap) {
+
+                // If they are connected..
+                if (snap.val()) {
+
+                    // Add user to the connections list.
+                    var con = connectionsRef.push(true);
+                    // Remove user from the connection list when they disconnect.
+                    con.onDisconnect().remove();
+                }
+            });
+
+
 
             $("#login").on("click", function (event) {
 
+                event.preventDefault();
                 $(".content").hide();
 
                 ui.start('#firebaseui-auth-container', {
                     signInOptions: [
                         firebase.auth.EmailAuthProvider.PROVIDER_ID
                     ],
+                    signInSuccessUrl: 'index.html'
                     // Other config options...
                 });
 
@@ -246,6 +264,47 @@
                 });
 
             });
+
+            $("#logout").on("click", function (event) {
+                event.preventDefault();
+
+                firebase.auth().signOut()
+                    .then(function (anon) {
+                        console.log(anon);
+                    });
+
+                $("#userName").text(" ");
+            });
+
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (user) {
+                    console.log(user.uid);
+
+                    $("#userName").text(user.displayName);
+
+                    $("#logout").show();
+                    $("#login").hide();
+
+
+
+                    currentUser = user;
+                    database.ref('/user' + currentUser.uid)
+
+                } else {
+                    console.log("Not Logged In");
+
+                    $("#userName").text(" ");
+
+                    $("#logout").hide();
+                    $("#login").show();
+
+                    currentUser = null;
+                    database.ref('/user' + currentUser);
+                }
+
+            });
+
+
 
 
 
@@ -325,26 +384,41 @@
 
                 console.log(movie);
 
-                database.ref('/users').set({
-                    movieName: movie
-                })
-
                 localStorage.setItem(
                     "movieName", movie
                 )
+
+                if (currentUser === null) {
+                    database.ref('/user' + currentUser).push({
+                        movie: movie
+                    })
+                } else {
+                    database.ref('/user' + currentUser.uid).set({
+                        movie: movie
+                    })
+                };
+
             });
 
             $("td").on("click", function (event) {
                 event.preventDefault();
 
                 var movie = $(this).text().trim();
-
-                database.ref('/users').set({
-                    movieName: movie
-                })
+                
                 localStorage.setItem(
                     "movieName", movie
                 )
+
+                if (currentUser === null) {
+                    database.ref('/user' + currentUser).push({
+                        movie: movie
+                    })
+                } else {
+                    database.ref('/user' + currentUser.uid).set({
+                        movie: movie
+                    })
+                };
+
             });
 
         });
